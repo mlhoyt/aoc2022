@@ -1,0 +1,7 @@
+version: '3'
+
+tasks:
+  cov:
+    cmds:
+      - $(rustc --print sysroot)/lib/rustlib/aarch64-apple-darwin/bin/llvm-profdata merge -sparse $(ls -1t default_*.profraw | head -n 1) -o default.profdata
+      - $(rustc --print sysroot)/lib/rustlib/aarch64-apple-darwin/bin/llvm-cov show target/debug/day07 -instr-profile=default.profdata -show-line-counts-or-regions -show-instantiations
