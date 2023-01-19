@@ -2,14 +2,24 @@ package aoc
 
 type HashSet[K comparable] map[K]struct{}
 
-func NewHashSetFromSlice[K comparable](vs []K) HashSet[K] {
+func NewHashSet[K comparable]() HashSet[K] {
 	set := HashSet[K]{}
 
+	return set
+}
+
+func NewHashSetFromSlice[K comparable](vs []K) HashSet[K] {
+	set := NewHashSet[K]()
+
 	for _, v := range vs {
-		set[v] = struct{}{}
+		set.Insert(v)
 	}
 
 	return set
+}
+
+func (self HashSet[K]) Insert(k K) {
+	self[k] = struct{}{}
 }
 
 func (self HashSet[K]) Contains(v K) bool {
