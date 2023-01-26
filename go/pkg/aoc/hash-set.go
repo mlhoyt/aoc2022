@@ -18,6 +18,10 @@ func NewHashSetFromSlice[K comparable](vs []K) HashSet[K] {
 	return set
 }
 
+func (self HashSet[K]) Length() uint {
+	return uint(len(self))
+}
+
 func (self HashSet[K]) Insert(k K) {
 	self[k] = struct{}{}
 }

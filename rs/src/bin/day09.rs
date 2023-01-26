@@ -55,6 +55,44 @@ type Data = Vec<Point>;
 
 type Point = (isize, isize);
 
+// trait Adder {
+//     fn add(&self, other: &Self) -> Self;
+// }
+
+// impl Adder for Point {
+//     fn add(&self, other: &Self) -> Self {
+//         (self.0 + other.0, self.1 + other.1)
+//     }
+// }
+
+// trait Follower {
+//     fn follow(&self, other: &Self) -> Self;
+// }
+
+// impl Follower for Point {
+//     fn follow(&self, other: &Self) -> Self {
+//         let dx = other.0 - self.0;
+//         let dy = other.1 - self.1;
+
+//         let xp = if dx != 0 {
+//             self.0 + (dx / dx.abs())
+//         } else {
+//             self.0
+//         };
+//         let yp = if dy != 0 {
+//             self.1 + (dy / dy.abs())
+//         } else {
+//             self.1
+//         };
+
+//         if dx.abs() > 1 || dy.abs() > 1 {
+//             (xp, yp)
+//         } else {
+//             self.clone()
+//         }
+//     }
+// }
+
 fn part1(data: &Data) -> usize {
     let mut head = Point::default();
     let mut tail = Point::default();
@@ -64,6 +102,8 @@ fn part1(data: &Data) -> usize {
     data.iter().for_each(|(dx, dy)| {
         head = (head.0 + dx, head.1 + dy);
         tail = update_tail(&head, &tail);
+        // head = head.add(&(*dx, *dy));
+        // tail = tail.follow(&head);
 
         ps.insert(tail.clone());
     });
