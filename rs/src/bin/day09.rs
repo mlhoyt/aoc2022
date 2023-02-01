@@ -43,6 +43,7 @@ fn parse(input: &str) -> Result<Data, String> {
             let dist = dist.unwrap();
 
             Ok(std::iter::repeat(dir).take(dist).collect::<Vec<_>>())
+            // Ok(dir.repeat(dist))
         })
         .flat_map(|result| match result {
             Ok(vec) => vec.into_iter().map(|v| Ok(v)).collect(),
@@ -54,6 +55,19 @@ fn parse(input: &str) -> Result<Data, String> {
 type Data = Vec<Point>;
 
 type Point = (isize, isize);
+
+// trait Repeater
+// where
+//     Self: Sized,
+// {
+//     fn repeat(&self, n: usize) -> Vec<Self>;
+// }
+
+// impl Repeater for Point {
+//     fn repeat(&self, n: usize) -> Vec<Self> {
+//         std::iter::repeat(*self).take(n).collect()
+//     }
+// }
 
 // trait Adder {
 //     fn add(&self, other: &Self) -> Self;
