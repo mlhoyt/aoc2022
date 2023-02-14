@@ -1,3 +1,5 @@
+pub mod grid2d;
+
 use std::io::{BufRead, BufReader};
 
 pub fn read_stdin() -> Result<String, std::io::Error> {
