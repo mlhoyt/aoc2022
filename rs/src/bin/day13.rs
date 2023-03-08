@@ -172,25 +172,7 @@ impl std::cmp::Ord for PacketData {
     fn cmp(&self, other: &Self) -> std::cmp::Ordering {
         match (self, other) {
             (PacketData::Value(vl), PacketData::Value(vr)) => vl.cmp(vr),
-            (PacketData::List(vl), PacketData::List(vr)) => {
-                let lc = vl.iter().zip(vr.iter()).map(|(v1, v2)| v1.cmp(v2)).fold(
-                    std::cmp::Ordering::Equal,
-                    |acc, v| match (acc, v) {
-                        (std::cmp::Ordering::Equal, v) => v,
-                        (ne, _) => ne,
-                    },
-                );
-
-                if lc != std::cmp::Ordering::Equal {
-                    lc
-                } else if vl.len() < vr.len() {
-                    std::cmp::Ordering::Less
-                } else if vl.len() > vr.len() {
-                    std::cmp::Ordering::Greater
-                } else {
-                    std::cmp::Ordering::Equal
-                }
-            }
+            (PacketData::List(vl), PacketData::List(vr)) => vl.cmp(vr),
             (PacketData::Value(_), PacketData::List(_)) => {
                 PacketData::List(vec![self.clone()]).cmp(other)
             }
@@ -297,16 +279,7 @@ impl PartialEq for PacketData {
     fn eq(&self, other: &Self) -> bool {
         match (self, other) {
             (PacketData::Value(vl), PacketData::Value(vr)) => vl == vr,
-            (PacketData::List(vl), PacketData::List(vr)) => {
-                if vl.len() == vr.len() {
-                    vl.iter()
-                        .zip(vr.iter())
-                        .map(|(v1, v2)| *v1 == *v2)
-                        .all(|v| v)
-                } else {
-                    false
-                }
-            }
+            (PacketData::List(vl), PacketData::List(vr)) => vl == vr,
             (PacketData::Value(_), PacketData::List(_)) => {
                 *other == PacketData::List(vec![self.clone()])
             }
