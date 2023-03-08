@@ -1,5 +1,3 @@
-use aoc;
-
 fn main() {
     let input = aoc::read_stdin().expect("cannot read stdin");
     // println!("{}", input);
@@ -48,19 +46,19 @@ impl std::str::FromStr for PacketData {
     type Err = String;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        if s.starts_with("[") {
-            if !s.ends_with("]") {
+        if s.starts_with('[') {
+            if !s.ends_with(']') {
                 return Err("packet-data list string must start with [ and end with ]".into());
             }
 
-            let mut sp = s.clone();
-            sp = sp.strip_prefix("[").unwrap().strip_suffix("]").unwrap();
+            let mut sp = s;
+            sp = sp.strip_prefix('[').unwrap().strip_suffix(']').unwrap();
 
             let mut data: Vec<PacketData> = vec![];
 
             while !sp.is_empty() {
-                if sp.starts_with("[") {
-                    match find_to_matching_bracket(&sp) {
+                if sp.starts_with('[') {
+                    match find_to_matching_bracket(sp) {
                         Some(n) => {
                             let (packet_data, rest) = sp.split_at(n + 1);
 
@@ -82,7 +80,7 @@ impl std::str::FromStr for PacketData {
                         }
                     };
                 } else if sp.starts_with(char::is_numeric) {
-                    let n = find_to_end_of_number(&sp);
+                    let n = find_to_end_of_number(sp);
                     let (packet_data, rest) = sp.split_at(n + 1);
 
                     match packet_data.parse::<PacketData>() {
@@ -95,10 +93,9 @@ impl std::str::FromStr for PacketData {
                     return Err("unexpected packet data string".into());
                 }
 
-                match sp.strip_prefix(",") {
-                    Some(v) => sp = v,
-                    _ => (), // do nothing
-                };
+                if let Some(v) = sp.strip_prefix(',') {
+                    sp = v
+                }
             }
 
             Ok(PacketData::List(data))
@@ -131,7 +128,7 @@ fn find_to_matching_bracket(s: &str) -> Option<usize> {
     });
 
     if matched {
-        Some(n as usize)
+        Some(n)
     } else {
         None
     }
@@ -305,7 +302,7 @@ impl PartialEq for PacketData {
                     vl.iter()
                         .zip(vr.iter())
                         .map(|(v1, v2)| *v1 == *v2)
-                        .fold(true, |acc, v| acc && v)
+                        .all(|v| v)
                 } else {
                     false
                 }
@@ -381,8 +378,7 @@ fn part2(data: &Data) -> usize {
     let mut all_packets: Vec<_> = data
         .pairs
         .iter()
-        .map(|(p1, p2)| vec![p1, p2])
-        .flatten()
+        .flat_map(|(p1, p2)| vec![p1, p2])
         .collect();
 
     let div1 = "[[2]]".parse::<PacketData>().unwrap();
